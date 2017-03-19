@@ -28,7 +28,7 @@ class LaravelCacheServiceProvider extends ServiceProvider
             return $this->app->make(CacheManager::class)->store()->getStore();
         });
 
-        Event::listen('eloquent.saved: *', function (Model $model) {
+        Event::listen(['eloquent.saved: *', 'eloquent.deleted: *', 'eloquent.restored: *'], function (Model $model) {
             /** @var CacheInvalidator $cacheInvalidator */
             $cacheInvalidator = $this->app->make(CacheInvalidator::class);
             $cacheInvalidator->invalidateByModel($model);
