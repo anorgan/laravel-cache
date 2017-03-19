@@ -45,7 +45,9 @@ class TagFinder
      */
     private function getTags(Model $model)
     {
-        $tags[] = $this->createTag($model);
+        $tags = [
+            $this->createTag($model),
+        ];
 
         foreach ($model->getRelations() as $relation) {
             if ($relation instanceof Collection) {
