@@ -1,5 +1,5 @@
 {
-  "name": "anorgan/laravel_cache",
+  "name": "anorgan/laravel-cache",
   "description": "Laravel Cache package that supports tagging",
   "license": "MIT",
   "authors": [{"name": "Marin Crnković", "email": "marin.crnkovic@gmail.com"}],
