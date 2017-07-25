@@ -43,6 +43,17 @@ class LaravelCacheServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->register(AlternativeCacheStoresServiceProvider::class);
+        $this->app->afterResolving('cache', function () {
+            $cacheManager = $this->app->make('cache');
+            $cacheManager->extend('redis', function ($app, array $cacheConfig) use ($cacheManager) {
+                $store = new AlternativeRedisCacheStore(
+                    $app['redis'],
+                    array_get($cacheConfig, 'prefix') ?: config('cache.prefix'),
+                    array_get($cacheConfig, 'connection', 'default') ?: 'default'
+                );
+                return $cacheManager->repository($store);
+            });
+        });
         $this->mergeConfigFrom(__DIR__.'/../config/laravel-cache.php', 'laravel-cache');
     }
 }

@@ -52,7 +52,7 @@ class TagFinder
         foreach ($model->getRelations() as $relation) {
             if ($relation instanceof Collection) {
                 $tags = array_merge($tags, $this->getTagsFromCollection($relation));
-            } else {
+            } elseif ($relation instanceof Model) {
                 $tags = array_merge($tags, $this->getTags($relation));
             }
         }
