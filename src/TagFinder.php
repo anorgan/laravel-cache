@@ -3,6 +3,7 @@
 namespace Anorgan\LaravelCache;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Support\Collection;
 
 /**
@@ -18,6 +19,12 @@ class TagFinder
     public function find($models)
     {
         if ($models instanceof Model) {
+
+            // Ignore Pivot models
+            if ($models instanceof Pivot) {
+                return [];
+            }
+
             $models = collect([$models]);
         }
 
@@ -45,6 +52,11 @@ class TagFinder
      */
     private function getTags(Model $model)
     {
+        if ($model instanceof Pivot) {
+            // Ignore Pivot models
+            return [];
+        }
+
         $tags = [
             $this->createTag($model),
         ];
@@ -52,6 +64,9 @@ class TagFinder
         foreach ($model->getRelations() as $relation) {
             if ($relation instanceof Collection) {
                 $tags = array_merge($tags, $this->getTagsFromCollection($relation));
+            } elseif ($relation instanceof Pivot) {
+                // Ignore Pivot models
+                $tags = [];
             } elseif ($relation instanceof Model) {
                 $tags = array_merge($tags, $this->getTags($relation));
             }
